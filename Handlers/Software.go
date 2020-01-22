@@ -7,10 +7,13 @@ import (
 	"net/http"
 
 	Model "github.com/SGarcia710/comba-dashboard-server/Model/structs"
+	Utils "github.com/SGarcia710/comba-dashboard-server/Utils"
 )
 
-// Sofware Handlers
-func getSoftwares(w http.ResponseWriter, r *http.Request) {
+func GetSoftwares(w http.ResponseWriter, r *http.Request) {
+	db := Utils.OpenDB()
+	defer db.Close()
+
 	w.Header().Set("Content-Type", "application/json")
 	var softwares []Model.Software
 
@@ -29,9 +32,11 @@ func getSoftwares(w http.ResponseWriter, r *http.Request) {
 		softwares = append(softwares, software)
 	}
 	json.NewEncoder(w).Encode(softwares)
-} // Funciona
+}
 
-func createSoftware(w http.ResponseWriter, r *http.Request) {
+func CreateSoftware(w http.ResponseWriter, r *http.Request) {
+	db := Utils.OpenDB()
+	defer db.Close()
 	stmt, err := db.Prepare("INSERT INTO software(id_soft, nom_soft, desc_soft, fec_soft) VALUES(null, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
@@ -54,4 +59,4 @@ func createSoftware(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "New software was created")
-} // Funciona
+}
